@@ -4,8 +4,9 @@ import subprocess
 # Path to the CSV file
 csv_file = 'test.csv'
 
-# Directory where you want to save the downloaded segments
+# Directory to save the downloaded segments
 output_directory = 'videos/'
+temp_directory = 'temp/'
 
 # Read the CSV file and iterate through its rows
 with open(csv_file, 'r') as csvfile:
@@ -20,7 +21,7 @@ with open(csv_file, 'r') as csvfile:
         # Format the URL for the video
         video_url = f"https://www.youtube.com/watch?v={youtube_id}"
 
-        # Define the start and end timestamps
+        # Define the start and end timestamps, as well as the time range
         start_time_seconds = round(float(start_time))
         end_time_seconds = round(float(end_time))
         time_range = end_time_seconds - start_time_seconds
@@ -30,7 +31,7 @@ with open(csv_file, 'r') as csvfile:
         output_path = f"{output_directory}{output_filename}"
 
         temp_filename = f"temp_{output_filename}"
-        temp_output_path = f"temp/{temp_filename}"
+        temp_output_path = f"{temp_directory}{temp_filename}"
 
         yt_dlp_command = [
             'yt-dlp',
@@ -54,18 +55,16 @@ with open(csv_file, 'r') as csvfile:
 
 
         try:
-            print("Executing yt_dlp command:")
-            print(" ".join(yt_dlp_command))
+            # Download the video segment
             subprocess.run(yt_dlp_command, check=True)
 
-            print("Executing ffmpeg command:")
-            print(" ".join(ffmpeg_command))
+            # Trim the video segment
             subprocess.run(ffmpeg_command, check=True)
 
-            print("Executing delete temp file command:")
-            print(" ".join(delete_temp_file_command))
+            # Delete the temporary file
             subprocess.run(delete_temp_file_command, check=True)
 
             print(f"Downloaded {output_filename}")
+            
         except Exception as e:
             print(f"Error downloading {output_filename}: {e}")
