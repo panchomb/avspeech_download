@@ -44,7 +44,7 @@ with open(csv_file, 'r') as csvfile:
             'ffmpeg',
             '-ss', f'{start_time_seconds}',
             '-i', f'{temp_output_path}',
-            '-to', f'{time_range}',
+            '-t', f'{time_range}',
             '-c', 'copy', f'{output_path}'
         ]
 
@@ -65,6 +65,6 @@ with open(csv_file, 'r') as csvfile:
             subprocess.run(delete_temp_file_command, check=True)
 
             print(f"Downloaded {output_filename}")
-            
+
         except Exception as e:
             print(f"Error downloading {output_filename}: {e}")
